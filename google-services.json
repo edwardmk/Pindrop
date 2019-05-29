@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "499958001765",
+    "firebase_url": "https://finalproject-366f8.firebaseio.com",
+    "project_id": "finalproject-366f8",
+    "storage_bucket": "finalproject-366f8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:499958001765:android:a1be70cfa1a3e47f",
+        "android_client_info": {
+          "package_name": "com.bowling.edward.bowling"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "499958001765-6t0uo295hg5nv13fkf6q4mrso21ioqcf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bowling.edward.bowling",
+            "certificate_hash": "6fd5b22e1bd0c6f018798649fc41f1ab0be9e62b"
+          }
+        },
+        {
+          "client_id": "499958001765-7v8kkdu9bm59unlrfi9np19vgn98q1i7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIUdmvacCqSeWbOtLL1Tg2CEmYkMbBQew"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "499958001765-7v8kkdu9bm59unlrfi9np19vgn98q1i7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
