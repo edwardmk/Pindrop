@@ -1,2 +1,2 @@
 # Pindrop
-Bowling application
+A Bowling application
