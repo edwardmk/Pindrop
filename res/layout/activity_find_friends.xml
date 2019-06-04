@@ -108,7 +108,8 @@
                     android:layout_weight="1"
                     android:text="View Statistics"
                     android:textSize="18sp"
-                    tools:visibility="invisible" />
+                    tools:visibility="invisible"
+                    android:background="@drawable/buttonshape"/>
 
             </LinearLayout>
 
