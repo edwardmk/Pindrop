@@ -1,7 +1,6 @@
 package com.bowling.edward.bowling.Friends;
 
 import android.content.Intent;
-import android.service.voice.VoiceInteractionSessionService;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
@@ -13,11 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.bowling.edward.bowling.Constructors.Friend;
 import com.bowling.edward.bowling.Constructors.User;
 import com.bowling.edward.bowling.Game;
 import com.bowling.edward.bowling.HomePage;
 import com.bowling.edward.bowling.LineGraphStats.FinalScoreStatistics;
+import com.bowling.edward.bowling.LoadingScreen;
+import com.bowling.edward.bowling.Login;
 import com.bowling.edward.bowling.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +31,6 @@ import android.support.annotation.NonNull;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class FindFriends extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -48,7 +47,7 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String friendId;
-
+    private boolean statsBool = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,13 +76,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         showUserName = findViewById(R.id.userNameToShow);
         showEmail = findViewById(R.id.emailToShow);
 
-//        addFriendButton.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public  void onClick(View v){
-//                CheckFriend();
-//            }
-//
-//        });
         iButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public  void onClick(View v){
@@ -95,8 +87,6 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
                 Log.d(TAG, "onDataChange: Added information to database: \n" +
                         dataSnapshot.getValue());
             }
@@ -121,7 +111,8 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
                     if (userEmail.equals(emailToSearch)) {
                         showUserName.setText(username);
                         showEmail.setText(userEmail);
-                        viewFriendStats.setVisibility(View.VISIBLE);
+//                        viewFriendStats.setVisibility(View.VISIBLE);
+                        statsBool = true;
                     }
                 }
 
@@ -147,109 +138,15 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         }
 
         public void goToFriendStats(){
+        if(statsBool == true) {
             Intent i = new Intent(FindFriends.this, ViewFriendStats.class);
             i.putExtra("friendId", friendId);
             startActivity(i);
         }
-
-
-//        public void CheckFriend(){
-//            final DatabaseReference emailRef = FirebaseDatabase.getInstance().getReference("users").child(userID).child("friends");
-//            processDone = false;
-//            emailRef.addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//
-//                    if (dataSnapshot.getValue() == null && processDone == false){
-//                        Toast.makeText(FindFriends.this, "creating friends", Toast.LENGTH_SHORT).show();
-//                     //   AddFriend();
-//                        processDone = true;
-//                    }
-//                    else if (processDone == false){
-//                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-//                        String email = data.child("email").getValue().toString();
-//                        String emailOfFriend = showEmail.getText().toString();
-//                        if (email.equals(emailOfFriend) && processDone == false) {
-//                            checkIfExists = true;
-//                            processDone = true;
-//                        }
-//                        else if (processDone == false && checkIfExists == false) {
-//                            checkIfExists = false;
-//                            processDone = true;
-//                        }
-//                    }
-//                    if (checkIfExists == true && processDone == true) {
-//                        Toast.makeText(FindFriends.this, "exists", Toast.LENGTH_SHORT).show();
-//                        processDone = true;
-//                    }
-//                    else if (checkIfExists == false && processDone == true) {
-//                        Toast.makeText(FindFriends.this, "not exists", Toast.LENGTH_SHORT).show();
-//                        checkIfExists = true;
-//                     //   AddFriend();
-//                    }
-//                    }
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(DatabaseError databaseError) {
-//
-//                }
-//            });
-//        }
-//    public void AddFriend() {
-////        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
-////        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users").child(userID);
-////        ref.orderByChild("email").equalTo(showEmail.getText().toString()).addValueEventListener(new ValueEventListener() {
-////            @Override
-////            public void onDataChange(DataSnapshot dataSnapshot) {
-////                if (dataSnapshot.exists()) {
-////                    Toast.makeText(FindFriends.this, "Stop!", Toast.LENGTH_LONG).show();
-////                }
-////                else {
-//                    DatabaseReference usersDb = FirebaseDatabase.getInstance().getReference().child("users");
-//                    Query query = usersDb.orderByChild("email").startAt(showEmail.getText().toString()).endAt(showEmail.getText().toString() + "\uf8ff");
-//                    query.addChildEventListener(new ChildEventListener() {
-//                        @Override
-//                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                            String email = "";
-//                            String uid = dataSnapshot.getRef().getKey();
-//                            String usernameToAdd = "";
-//                            if (dataSnapshot.child("email").getValue() != null) {
-//                                email = dataSnapshot.child("email").getValue().toString();
-//                                usernameToAdd = dataSnapshot.child("username").getValue().toString();
-//
-//                                if (!email.equals(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
-//                                    Friend obj = new Friend(email, usernameToAdd, uid);
-//                                    final String user_id = mAuth.getCurrentUser().getUid();
-//                                    myRef.child("users").child(user_id).child("friends").push().setValue(obj);
-//                                } else {
-//                                    Toast.makeText(FindFriends.this, "You can't be friends with yourself", Toast.LENGTH_SHORT).show();
-//                                }
-//                            }
-//
-//
-//                        }
-//
-//                        @Override
-//                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        public void onChildRemoved(DataSnapshot ds) {
-//                        }
-//
-//                        @Override
-//                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                        }
-//                    });
-//                }
+        else {
+            Toast.makeText(FindFriends.this, "Find person first.", Toast.LENGTH_SHORT).show();
+        }
+        }
 
 
     @Override
@@ -274,6 +171,11 @@ public class FindFriends extends AppCompatActivity implements NavigationView.OnN
         }
         else if (id == R.id.nav_view_friends) {
             Intent i = new Intent(this, FindFriends.class);
+            startActivity(i);
+            finish();
+        }
+        else if (id == R.id.nav_log_out) {
+            Intent i = new Intent(this, LoadingScreen.class);
             startActivity(i);
             finish();
         }
