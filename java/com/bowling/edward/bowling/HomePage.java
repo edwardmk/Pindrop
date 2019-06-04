@@ -88,6 +88,11 @@ public class HomePage extends AppCompatActivity implements
             Intent i = new Intent(this, LocalAlleys.class);
             startActivity(i);
         }
+        else if (id == R.id.nav_log_out) {
+            Intent i = new Intent(this, LoadingScreen.class);
+            startActivity(i);
+            finish();
+        }
         return false;
     }
     public void goToGame(){
@@ -106,5 +111,6 @@ public class HomePage extends AppCompatActivity implements
         Intent i = new Intent(HomePage.this, FindFriends.class);
         startActivity(i);
     }
+
 
 }
