@@ -24,6 +24,7 @@ import com.bowling.edward.bowling.Friends.FindFriends;
 import com.bowling.edward.bowling.Game;
 import com.bowling.edward.bowling.HomePage;
 import com.bowling.edward.bowling.LineGraphStats.FinalScoreStatistics;
+import com.bowling.edward.bowling.LoadingScreen;
 import com.bowling.edward.bowling.R;
 
 import org.json.JSONArray;
@@ -41,24 +42,22 @@ import java.util.List;
 public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback, NavigationView.OnNavigationItemSelectedListener {
 
     private RecyclerView mListView;
-    private static final int REQUEST_LOCATION = 0;
-    private static final String API_KEY = "AIzaSyCIUdmvacCqSeWbOtLL1Tg2CEmYkMbBQew";
+    private static final String apiKey = "AIzaSyCIUdmvacCqSeWbOtLL1Tg2CEmYkMbBQew";
 
-   private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
-    private static final String TYPE_DETAILS = "/details";
-    private static final String TYPE_SEARCH = "/textsearch";
-    private static final String OUT_JSON = "/json?";
-    private static final String LOG_TAG = "ListRest";
+   private static final String api = "https://maps.googleapis.com/maps/api/place";
+    private static final String details = "/details";
+    private static final String search = "/textsearch";
+    private static final String json = "/json?";
+    private static final String log = "alley";
     Double longitude, latitude;
     int count = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_alleys);
         mListView = findViewById(R.id.alleyView);
         getCoordinates();
-
     }
 
     public void getCoordinates() {
@@ -93,13 +92,13 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
         HttpURLConnection conn = null;
         StringBuilder jsonResults = new StringBuilder();
         try {
-            StringBuilder sb = new StringBuilder(PLACES_API_BASE);
-            sb.append(TYPE_SEARCH);
-            sb.append(OUT_JSON);
+            StringBuilder sb = new StringBuilder(api);
+            sb.append(search);
+            sb.append(json);
             sb.append("location=" + (lng) + "," + (lat));
             sb.append("&radius=" + (radius));
             sb.append("&query=bowling+alley");
-            sb.append("&key=" + API_KEY);
+            sb.append("&key=" + apiKey);
 
             URL url = new URL(sb.toString());
             conn = (HttpURLConnection) url.openConnection();
@@ -111,10 +110,10 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
                 jsonResults.append(buff, 0, read);
             }
         } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Error processing API URL", e);
+            Log.e(log, "Error processing API URL", e);
             return resultList;
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error connecting to API", e);
+            Log.e(log, "Error connecting to API", e);
             return resultList;
         } finally {
             if (conn != null) {
@@ -134,7 +133,7 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
                 place.placeID = predsJsonArray.getJSONObject(i).getString("place_id");
                 String latitude = Double.toString(lat);
                 String longitude = Double.toString(lng);
-                place.currLocation = longitude + "," + latitude;
+                place.userLocation = longitude + "," + latitude;
                 if (count < 6) {
                     place.website = websiteMaker(place.placeID);
                 }
@@ -143,7 +142,7 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
                 }
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error processing JSON results", e);
+            Log.e(log, "Error processing JSON results", e);
         }
 
         return resultList;
@@ -153,12 +152,12 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
             String webObj = null;
             StringBuilder jsonDetails = new StringBuilder();
             try {
-                StringBuilder sb1 = new StringBuilder(PLACES_API_BASE);
-                sb1.append(TYPE_DETAILS);
-                sb1.append(OUT_JSON);
+                StringBuilder sb1 = new StringBuilder(api);
+                sb1.append(details);
+                sb1.append(json);
                 sb1.append("place_id=" + placeID);
                 sb1.append("&fields=website");
-                sb1.append("&key=" + API_KEY);
+                sb1.append("&key=" + apiKey);
 
                 URL url = new URL(sb1.toString());
                 conn = (HttpURLConnection) url.openConnection();
@@ -172,9 +171,9 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
                 }
 
             } catch (MalformedURLException e) {
-                Log.e(LOG_TAG, "Error processing API URL", e);
+                Log.e(log, "Error processing API URL", e);
             } catch (IOException e) {
-                Log.e(LOG_TAG, "Error connecting to API", e);
+                Log.e(log, "Error connecting to API", e);
             } finally {
                 if (conn != null) {
                     conn.disconnect();
@@ -185,7 +184,7 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
                 JSONObject sys  = reader.getJSONObject("result");
                 webObj = sys.getString("website");
             } catch (JSONException e) {
-                Log.e(LOG_TAG, "Error processing JSON results", e);
+                Log.e(log, "Error processing JSON results", e);
             }
             count++;
             return webObj;
@@ -217,6 +216,11 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
         }
         else if (id == R.id.nav_find_alley) {
             Intent i = new Intent(this, LocalAlleys.class);
+            startActivity(i);
+            finish();
+        }
+        else if (id == R.id.nav_log_out) {
+            Intent i = new Intent(this, LoadingScreen.class);
             startActivity(i);
             finish();
         }
