@@ -133,7 +133,7 @@ public class LocalAlleys extends AppCompatActivity implements ActivityCompat.OnR
                 place.placeID = predsJsonArray.getJSONObject(i).getString("place_id");
                 String latitude = Double.toString(lat);
                 String longitude = Double.toString(lng);
-                place.userLocation = longitude + "," + latitude;
+                place.currLocation = longitude + "," + latitude;
                 if (count < 6) {
                     place.website = websiteMaker(place.placeID);
                 }
