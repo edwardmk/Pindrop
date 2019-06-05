@@ -81,7 +81,7 @@ public class FinalScoreStatistics extends AppCompatActivity
                     yAxisValues.add(new PointValue(i, yAxisData[i]));
                 }
                 Axis yAxis = new Axis();
-                yAxis.setName("Average Score");
+                yAxis.setName("Score");
                 yAxis.setTextColor(Color.parseColor("#03A9F4"));
                 yAxis.setTextSize(16);
                 data.setAxisYLeft(yAxis);
